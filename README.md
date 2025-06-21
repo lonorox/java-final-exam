@@ -31,7 +31,5 @@
 5. View updates display accordingly
 
 ### File Organization
-- **NewGUI**: Modern, maintainable code with clear responsibilities
-- **LegacyCore/GUI**: Preserved for compatibility and specific features
 - **Database**: Centralized data management
 - **GM**: Game analysis and validation logic
