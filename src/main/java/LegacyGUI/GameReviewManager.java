@@ -1,7 +1,9 @@
-package Chess;
+package LegacyGUI;
 
 import GM.GameMaster;
 import GM.GameResult;
+import LegacyCore.ChessGame;
+
 import javax.swing.*;
 import java.awt.*;
 

@@ -1,9 +1,9 @@
 package Chess;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import LegacyGUI.DatabaseGameHandler;
+import LegacyGUI.GameReviewManager;
+import LegacyGUI.PGNImportHandler;
+
 
 /**
  * ChessGUI is the main graphical user interface for the chess application.
@@ -43,28 +43,12 @@ public class ChessGUI {
             }
         });
 
-        // Setup play game button (to be implemented)
+        // Setup play game button
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String[] options = {"Player vs Player", "Player vs Computer", "Cancel"};
-                int choice = JOptionPane.showOptionDialog(
-                    frame,
-                    "Choose game mode:",
-                    "Game Mode Selection",
-                    JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    options,
-                    options[0]
-                );
-
-                if (choice == 0) { // Player vs Player
-                    startPlayerVsPlayerGame();
-                } else if (choice == 1) { // Player vs Computer
-                    JOptionPane.showMessageDialog(frame, "Player vs Computer mode coming soon!");
-                }
-                // Cancel (choice == 2) does nothing
+                // Start the new MVC-based chess game with start menu
+                startNewMVCGame();
             }
         });
 
@@ -104,19 +88,13 @@ public class ChessGUI {
     }
 
     /**
-     * Starts a new player vs player chess game in a new window.
+     * Starts a new MVC-based chess game with start menu.
      */
-    private void startPlayerVsPlayerGame() {
-        JFrame gameFrame = new JFrame("Chess Game - Player vs Player");
-        gameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
-        // Create and add the game panel
-        ChessGamePanel gamePanel = new ChessGamePanel();
-        gameFrame.add(gamePanel);
-        
-        // Set up the window
-        gameFrame.pack();
-        gameFrame.setLocationRelativeTo(frame);
-        gameFrame.setVisible(true);
+    private void startNewMVCGame() {
+        SwingUtilities.invokeLater(() -> {
+            NewGUI.Controller.ChessController controller = new NewGUI.Controller.ChessController();
+            NewGUI.View.GameWindow gameWindow = new NewGUI.View.GameWindow(controller);
+            SwingUtilities.invokeLater(new NewGUI.View.StartMenu(gameWindow, controller));
+        });
     }
 } 

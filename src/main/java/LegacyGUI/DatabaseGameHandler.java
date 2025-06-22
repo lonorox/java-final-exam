@@ -1,6 +1,8 @@
-package Chess;
+package LegacyGUI;
 
 import Database.DatabaseManager;
+import LegacyCore.ChessGame;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.Map;

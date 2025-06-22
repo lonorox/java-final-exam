@@ -1,4 +1,4 @@
-package Chess;
+package LegacyCore;
 
 import java.util.Map;
 

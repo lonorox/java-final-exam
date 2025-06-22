@@ -1,15 +1,16 @@
-package Chess;
+package LegacyGUI;
 
-import Pieces.Piece;
-import PgnAnalyzers.MoveInfo;
 import GM.GameMaster;
+import LegacyCore.Board;
+import LegacyCore.ChessGame;
+import PgnAnalyzers.MoveInfo;
+import Pieces.Piece;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -84,7 +85,7 @@ public class ChessReplayPanel extends JPanel {
                     boolean isWhite = moveIndex % 2 == 0;
                     MoveInfo move = new MoveInfo();
                     move.decipherMove(moves[moveIndex]);
-                    GM.GameMaster gm = new GM.GameMaster("");
+                    GameMaster gm = new GameMaster("");
                     gm.setBoard(board);
                     gm.analyzeMove(move, isWhite);
                     moveIndex++;

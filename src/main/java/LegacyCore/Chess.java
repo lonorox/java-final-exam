@@ -1,12 +1,11 @@
-package Chess;
+package LegacyCore;
+
 import Exceptions.ErrorLogger;
 import GM.GameMaster;
 import GM.GameResult;
 import PgnAnalyzers.FileHandler;
 import PgnAnalyzers.PGNReader;
 
-import java.io.FileReader;
-import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;

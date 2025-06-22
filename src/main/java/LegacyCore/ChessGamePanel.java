@@ -1,21 +1,21 @@
-package Chess;
+package LegacyCore;
 
-import Pieces.Piece;
 import GM.GameMaster;
 import PgnAnalyzers.MoveInfo;
-import static GM.moveValidators.isChecked;
-import static GM.moveValidators.isCheckMate;
+import Pieces.Piece;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static GM.moveValidators.isCheckMate;
+import static GM.moveValidators.isChecked;
 
 /**
  * ChessGamePanel provides an interactive interface for playing chess games.

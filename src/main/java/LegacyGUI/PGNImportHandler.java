@@ -1,8 +1,9 @@
-package Chess;
+package LegacyGUI;
 
+import Database.DatabaseManager;
+import LegacyCore.ChessGame;
 import PgnAnalyzers.FileHandler;
 import PgnAnalyzers.PGNReader;
-import Database.DatabaseManager;
 
 import javax.swing.*;
 import java.io.BufferedReader;
