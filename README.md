@@ -8,7 +8,8 @@
   - File operations: `PgnAnalyzers/FileHandler.java`
   - Data processing: `Database/DatabaseManager.java`
 
-- **Records**:
+- **Records**: 
+  - Game records: `LegacyCore/ChessGame.java`
 - **Threads**:  Not used in current implementation
 
 - **I/O**: 
