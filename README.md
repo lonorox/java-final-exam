@@ -8,8 +8,8 @@
   - File operations: `PgnAnalyzers/FileHandler.java`
   - Data processing: `Database/DatabaseManager.java`
 
-- **Records**: 
-  -Game Results: `GM/GameResult.java`
+- **Records**:
+   - Game Results: `GM/GameResult.java`
 - **Threads**:  Not used in current implementation
 
 - **I/O**: 
