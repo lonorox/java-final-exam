@@ -1,6 +1,6 @@
 package Database;
 
-import Chess.ChessGame;
+import LegacyCore.ChessGame;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

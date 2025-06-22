@@ -1,7 +1,7 @@
 package Database;
 
-import Chess.Board;
-import Chess.ChessGame;
+import LegacyCore.Board;
+import LegacyCore.ChessGame;
 import GM.GameMaster;
 import java.util.List;
 import java.util.ArrayList;

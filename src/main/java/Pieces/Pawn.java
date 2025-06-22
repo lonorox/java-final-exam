@@ -1,5 +1,5 @@
 package Pieces;
-import Chess.Board;
+import LegacyCore.Board;
 import Exceptions.ErrorLogger;
 import Exceptions.ValidationResult;
 import PgnAnalyzers.MoveInfo;

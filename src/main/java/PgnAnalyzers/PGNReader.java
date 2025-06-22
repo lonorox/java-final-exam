@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Chess.*;
+import LegacyCore.*;
 public class PGNReader {
      List<ChessGame> games;
 

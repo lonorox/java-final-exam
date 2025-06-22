@@ -1,6 +1,6 @@
 package GM;
 
-import Chess.Board;
+import LegacyCore.Board;
 import PgnAnalyzers.MoveInfo;
 import Pieces.*;
 

@@ -1,4 +1,4 @@
-import Chess.Chess;
+import LegacyCore.Chess;
 import PgnAnalyzers.FileHandler;
 import Chess.ChessGUI;
 import javax.swing.*;

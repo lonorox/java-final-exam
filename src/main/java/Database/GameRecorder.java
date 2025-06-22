@@ -1,6 +1,6 @@
 package Database;
 
-import Chess.ChessGame;
+import LegacyCore.ChessGame;
 import java.util.Map;
 import java.util.HashMap;
 import java.time.LocalDate;

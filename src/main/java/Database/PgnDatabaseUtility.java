@@ -1,6 +1,6 @@
 package Database;
 
-import Chess.ChessGame;
+import LegacyCore.ChessGame;
 import PgnAnalyzers.FileHandler;
 import PgnAnalyzers.PGNReader;
 

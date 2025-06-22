@@ -1,5 +1,12 @@
 package Chess;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import LegacyGUI.PGNImportHandler;
+import LegacyGUI.DatabaseGameHandler;
+import LegacyGUI.GameReviewManager;
 import LegacyGUI.DatabaseGameHandler;
 import LegacyGUI.GameReviewManager;
 import LegacyGUI.PGNImportHandler;
