@@ -1,3 +1,29 @@
+## Java Features Used
+
+- **Lambdas**: 
+  - File filtering: `PgnAnalyzers/FileHandler.java`
+  - Switch expressions: `GM/moveValidators.java`
+
+- **Streams**: 
+  - File operations: `PgnAnalyzers/FileHandler.java`
+  - Data processing: `Database/DatabaseManager.java`
+
+- **Records**: Not used in current implementation
+   -Game Results: `GM/GameResult.java`
+- **Threads**:  Not used in current implementation
+
+- **I/O**: 
+  - File reading/writing: `PgnAnalyzers/FileHandler.java`, `PgnAnalyzers/PGNReader.java`
+  - PGN file processing: `PgnAnalyzers/` folder
+    
+- **Networking**: Not implemented (local-only application)
+
+- **Database**: 
+  - SQLite integration: `Database/DatabaseManager.java`
+  - Game storage and retrieval: `Database/GameRecorder.java`, `Database/GameReplayer.java`
+  - PGN database utilities: `Database/PgnDatabaseUtility.java`
+
+
 ### Starting the Application
 1. Run `Main.java`
 2. The main GUI appears with options:
