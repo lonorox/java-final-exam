@@ -1,27 +1,27 @@
 ## Java Features Used
 
 - **Lambdas**: 
-  - File filtering: `PgnAnalyzers/FileHandler.java`
-  - Switch expressions: `GM/moveValidators.java`
+  - File filtering: `src/main/java/PgnAnalyzers/FileHandler.java`
+  - Switch expressions: `src/main/java/GM/moveValidators.java`
 
 - **Streams**: 
-  - File operations: `PgnAnalyzers/FileHandler.java`
-  - Data processing: `Database/DatabaseManager.java`
+  - File operations: `src/main/java/PgnAnalyzers/FileHandler.java`
+  - Data processing: `src/main/java/Database/DatabaseManager.java`
 
 - **Records**: 
-  - Game records: `LegacyCore/ChessGame.java`
+  - Game records: `src/main/java/LegacyCore/ChessGame.java`
 - **Threads**:  Not used in current implementation
 
 - **I/O**: 
-  - File reading/writing: `PgnAnalyzers/FileHandler.java`, `PgnAnalyzers/PGNReader.java`
-  - PGN file processing: `PgnAnalyzers/` folder
+  - File reading/writing: `src/main/java/PgnAnalyzers/FileHandler.java`, `PgnAnalyzers/PGNReader.java`
+  - PGN file processing: `src/main/java/PgnAnalyzers` folder
     
 - **Networking**: Not implemented (local-only application)
 
 - **Database**: 
-  - SQLite integration: `Database/DatabaseManager.java`
-  - Game storage and retrieval: `Database/GameRecorder.java`, `Database/GameReplayer.java`
-  - PGN database utilities: `Database/PgnDatabaseUtility.java`
+  - SQLite integration: `src/main/java/Database/DatabaseManager.java`
+  - Game storage and retrieval: `src/main/java/Database/GameRecorder.java`, `Database/GameReplayer.java`
+  - PGN database utilities: `src/main/java/Database/PgnDatabaseUtility.java`
 
 
 ### Starting the Application
@@ -41,13 +41,6 @@
 1. Click "Open Game from DB"
 2. Select a game from the database
 3. Use replay controls to step through moves
-
-## Technical Details
-
-### Architecture
-- **Separation of Concerns**: Game logic, data, and presentation are clearly separated
-- **Event-Driven**: User interactions trigger appropriate controller actions
-- **Modular Design**: Components can be easily extended or modified
 
 ### Data Flow
 1. User interacts with View components
