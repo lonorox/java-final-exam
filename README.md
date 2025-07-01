@@ -1,3 +1,5 @@
+This Java chess application provides a complete chess experience with both local and online gameplay options. The system implements all standard chess rules while offering additional features for game analysis, persistence, and multiplayer functionality.
+
 ## Java Features Used
 **Lambdas:**
 - File filtering using lambda expressions: PgnAnalyzers/FileHandler.java
