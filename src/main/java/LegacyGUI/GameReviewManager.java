@@ -1,8 +1,8 @@
 package LegacyGUI;
 
-import GM.GameMaster;
-import GM.GameResult;
-import LegacyCore.ChessGame;
+import server.GM.GameMaster;
+import server.GM.GameResult;
+import shared.LegacyCore.ChessGame;
 
 import javax.swing.*;
 import java.awt.*;

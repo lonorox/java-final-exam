@@ -1,7 +1,7 @@
 package LegacyGUI;
 
-import Database.DatabaseManager;
-import LegacyCore.ChessGame;
+import server.Database.DatabaseManager;
+import shared.LegacyCore.ChessGame;
 
 import javax.swing.*;
 import java.util.List;
