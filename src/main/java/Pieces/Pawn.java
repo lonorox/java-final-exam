@@ -1,8 +1,7 @@
 package Pieces;
-import LegacyCore.Board;
-import Exceptions.ErrorLogger;
-import Exceptions.ValidationResult;
-import PgnAnalyzers.MoveInfo;
+import shared.LegacyCore.Board;
+import shared.Exceptions.ValidationResult;
+import shared.PgnAnalyzers.MoveInfo;
 public class Pawn extends Piece {
     final private int id;
     final private String type;

@@ -1,9 +1,9 @@
 package LegacyGUI;
 
-import GM.GameMaster;
-import LegacyCore.Board;
-import LegacyCore.ChessGame;
-import PgnAnalyzers.MoveInfo;
+import server.GM.GameMaster;
+import shared.LegacyCore.Board;
+import shared.LegacyCore.ChessGame;
+import shared.PgnAnalyzers.MoveInfo;
 import Pieces.Piece;
 
 import javax.imageio.ImageIO;

@@ -1,9 +1,8 @@
 package Pieces;
 
-import LegacyCore.Board;
-import Exceptions.ErrorLogger;
-import Exceptions.ValidationResult;
-import PgnAnalyzers.MoveInfo;
+import shared.LegacyCore.Board;
+import shared.Exceptions.ValidationResult;
+import shared.PgnAnalyzers.MoveInfo;
 
 public class Rook extends Piece {
     final private boolean KingSide;

@@ -1,12 +1,8 @@
 package Pieces;
 
-import LegacyCore.Board;
-import Exceptions.ErrorLogger;
-import Exceptions.ValidationResult;
-import GM.GameMaster;
-import PgnAnalyzers.MoveInfo;
-
-import static GM.moveValidators.isChecked;
+import shared.LegacyCore.Board;
+import shared.Exceptions.ValidationResult;
+import shared.PgnAnalyzers.MoveInfo;
 
 public class King extends Piece {
     final private String type;

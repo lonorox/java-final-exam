@@ -1,15 +1,17 @@
 package Chess;
 
+
+import LegacyGUI.PGNImportHandler;
+import LegacyGUI.DatabaseGameHandler;
+import LegacyGUI.GameReviewManager;
+import client.NewGUI.Controller.ChessController;
+import client.NewGUI.View.GameWindow;
+import client.NewGUI.View.StartMenu;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import LegacyGUI.PGNImportHandler;
-import LegacyGUI.DatabaseGameHandler;
-import LegacyGUI.GameReviewManager;
-import LegacyGUI.DatabaseGameHandler;
-import LegacyGUI.GameReviewManager;
-import LegacyGUI.PGNImportHandler;
 
 
 /**
@@ -99,9 +101,9 @@ public class ChessGUI {
      */
     private void startNewMVCGame() {
         SwingUtilities.invokeLater(() -> {
-            NewGUI.Controller.ChessController controller = new NewGUI.Controller.ChessController();
-            NewGUI.View.GameWindow gameWindow = new NewGUI.View.GameWindow(controller);
-            SwingUtilities.invokeLater(new NewGUI.View.StartMenu(gameWindow, controller));
+            ChessController controller = new ChessController();
+            GameWindow gameWindow = new GameWindow(controller);
+            SwingUtilities.invokeLater(new StartMenu(gameWindow, controller));
         });
     }
 } 
