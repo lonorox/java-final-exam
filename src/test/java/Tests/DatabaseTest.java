@@ -1,6 +1,6 @@
 package Tests;
 
-import Database.PgnDatabaseUtility;
+import server.Database.PgnDatabaseUtility;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,8 +16,8 @@ public class DatabaseTest {
 //        createTestPgnFile();
 
         // Run tests
-//        cleanupDB();
-        testImportAndExport();
+        cleanupDB();
+//        testImportAndExport();
 //        testSingleGameExport();
         
         // Cleanup

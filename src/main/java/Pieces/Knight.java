@@ -1,8 +1,8 @@
 package Pieces;
 
-import LegacyCore.Board;
-import Exceptions.ValidationResult;
-import PgnAnalyzers.MoveInfo;
+import shared.LegacyCore.Board;
+import shared.Exceptions.ValidationResult;
+import shared.PgnAnalyzers.MoveInfo;
 
 public class Knight extends Piece {
     final private boolean KingSide;

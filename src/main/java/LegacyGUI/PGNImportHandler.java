@@ -1,9 +1,9 @@
 package LegacyGUI;
 
-import Database.DatabaseManager;
-import LegacyCore.ChessGame;
-import PgnAnalyzers.FileHandler;
-import PgnAnalyzers.PGNReader;
+import server.Database.DatabaseManager;
+import shared.LegacyCore.ChessGame;
+import shared.PgnAnalyzers.FileHandler;
+import shared.PgnAnalyzers.PGNReader;
 
 import javax.swing.*;
 import java.io.BufferedReader;

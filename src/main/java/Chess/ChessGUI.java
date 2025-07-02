@@ -1,15 +1,15 @@
 package Chess;
 
+
+import LegacyGUI.PGNImportHandler;
+import LegacyGUI.DatabaseGameHandler;
+import LegacyGUI.GameReviewManager;
+import client.NewGUI.Controller.ChessController;
+import client.NewGUI.View.GameWindow;
+import client.NewGUI.View.StartMenu;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import LegacyGUI.PGNImportHandler;
-import LegacyGUI.DatabaseGameHandler;
-import LegacyGUI.GameReviewManager;
-import LegacyGUI.DatabaseGameHandler;
-import LegacyGUI.GameReviewManager;
-import LegacyGUI.PGNImportHandler;
 
 
 /**
@@ -38,53 +38,40 @@ public class ChessGUI {
 
         // Create main action buttons
         JButton importButton = new JButton("Import PGN");
+        JButton exportButton = new JButton("Export To PGN");
         JButton playButton = new JButton("Play Game");
         JButton dbButton = new JButton("Open Game from DB");
         JButton quitButton = new JButton("Quit");
 
         // Setup PGN import functionality
-        importButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pgnHandler.importPGNFile();
-            }
-        });
-
+        importButton.addActionListener(e -> pgnHandler.importPGNFile());
+        // Setup export functionality
+        exportButton.addActionListener(e -> dbHandler.exportGameToPGN());
         // Setup play game button
-        playButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Start the new MVC-based chess game with start menu
-                startNewMVCGame();
-            }
+        playButton.addActionListener(e -> {
+            // Start the new MVC-based chess game with start menu
+            startNewMVCGame();
         });
 
         // Setup database game access
-        dbButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dbHandler.openGameFromDatabase();
-            }
-        });
+        dbButton.addActionListener(e -> dbHandler.openGameFromDatabase());
 
         // Setup quit button
-        quitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int confirm = JOptionPane.showConfirmDialog(
-                    frame,
-                    "Are you sure you want to quit?",
-                    "Confirm Quit",
-                    JOptionPane.YES_NO_OPTION
-                );
-                if (confirm == JOptionPane.YES_OPTION) {
-                    System.exit(0);
-                }
+        quitButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                frame,
+                "Are you sure you want to quit?",
+                "Confirm Quit",
+                JOptionPane.YES_NO_OPTION
+            );
+            if (confirm == JOptionPane.YES_OPTION) {
+                System.exit(0);
             }
         });
 
         // Add buttons to frame
         frame.add(importButton);
+        frame.add(exportButton);
         frame.add(playButton);
         frame.add(dbButton);
         frame.add(quitButton);
@@ -99,9 +86,9 @@ public class ChessGUI {
      */
     private void startNewMVCGame() {
         SwingUtilities.invokeLater(() -> {
-            NewGUI.Controller.ChessController controller = new NewGUI.Controller.ChessController();
-            NewGUI.View.GameWindow gameWindow = new NewGUI.View.GameWindow(controller);
-            SwingUtilities.invokeLater(new NewGUI.View.StartMenu(gameWindow, controller));
+            ChessController controller = new ChessController();
+            GameWindow gameWindow = new GameWindow(controller);
+            SwingUtilities.invokeLater(new StartMenu(gameWindow, controller));
         });
     }
 } 
