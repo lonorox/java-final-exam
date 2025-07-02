@@ -2,6 +2,8 @@ package client.NewGUI.Controller;
 
 import client.NewGUI.View.GameWindow;
 import client.NewGUI.Model.*;
+import client.Network.ChessClient;
+import client.NewGUI.Model.PieceColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,8 @@ public class ChessController implements ChessControllerInterface {
     private int whiteScore;
     private int blackScore;
     private List<String> moveList; // Store moves as strings
-    private String currentWhiteMove; // Store current white move
+    private ChessClient chessClient; // For networked play
+    private PieceColor playerColor;  // For networked play
 
     /**
      * Constructs a new ChessController.
@@ -29,7 +32,6 @@ public class ChessController implements ChessControllerInterface {
         this.whiteScore = 0;
         this.blackScore = 0;
         this.moveList = new ArrayList<>();
-        this.currentWhiteMove = "";
     }
 
     /**
@@ -39,6 +41,19 @@ public class ChessController implements ChessControllerInterface {
      */
     public void setView(GameWindow view) {
         this.view = view;
+    }
+
+    /**
+     * Starts a new game with the specified game mode, ChessClient, and player color (for networked play).
+     *
+     * @param gameMode The game mode to use
+     * @param chessClient The network client (null for local play)
+     * @param playerColor The player's color (null for local play)
+     */
+    public void startNewGame(String gameMode, ChessClient chessClient, PieceColor playerColor) {
+        this.chessClient = chessClient;
+        this.playerColor = playerColor;
+        startNewGame(gameMode);
     }
 
     /**
@@ -53,7 +68,6 @@ public class ChessController implements ChessControllerInterface {
         whiteScore = 0;
         blackScore = 0;
         moveList.clear();
-        currentWhiteMove = "";
         updateView();
 
         // If playing against computer and computer goes first, make computer move
@@ -71,6 +85,10 @@ public class ChessController implements ChessControllerInterface {
      * @return True if the move was successful, false otherwise
      */
     public boolean makeMove(Position fromPosition, Position toPosition) {
+        // In networked mode, only allow moves for the local player's color and turn
+        if (playerColor != null && gameState.getCurrentTurn() != playerColor) {
+            return false;
+        }
         // Get the piece at the source position
         Board board = gameState.getBoard();
         Piece piece = board.getPiece(fromPosition);
@@ -101,7 +119,7 @@ public class ChessController implements ChessControllerInterface {
             moveCount++;
             
             // Log the move to terminal
-            logMove(moveToMake, moveCount);
+            logMove(moveToMake);
             
             // Update score if there was a capture
             if (moveToMake.getCapturedPiece() != null) {
@@ -109,6 +127,14 @@ public class ChessController implements ChessControllerInterface {
             }
             
             updateView();
+
+            // If in networked mode, send move to server
+            if (chessClient != null && playerColor != null) {
+                // Convert move to string format expected by server
+                String moveString = convertMoveToPGN(moveToMake);
+                System.out.println("SENDING MOVE TO SERVER: " + moveString);
+                chessClient.sendMessage(new shared.Message(shared.Protocol.MOVE, moveString));
+            }
 
             // Check if the game is over
             if (gameState.isGameOver()) {
@@ -147,7 +173,7 @@ public class ChessController implements ChessControllerInterface {
                     moveCount++;
                     
                     // Log the computer move to terminal
-                    logMove(computerMove, moveCount);
+                    logMove(computerMove);
                     
                     // Update score if there was a capture
                     if (computerMove.getCapturedPiece() != null) {
@@ -309,18 +335,10 @@ public class ChessController implements ChessControllerInterface {
     /**
      * Logs a move to the terminal in PGN format.
      */
-    private void logMove(Move move, int moveNumber) {
+    private void logMove(Move move) {
         String pgnMove = convertMoveToPGN(move);
-        
-        if (move.getPiece().getColor() == PieceColor.WHITE) {
-            // White's move - store it and wait for black's move
-            currentWhiteMove = pgnMove;
-        } else {
-            // Black's move - complete the move pair and print
-            String movePair = currentWhiteMove + " " + pgnMove;
-            moveList.add(movePair);
-            System.out.println(moveNumber + ". " + movePair);
-        }
+        moveList.add(pgnMove);
+
     }
 
     /**
@@ -434,5 +452,146 @@ public class ChessController implements ChessControllerInterface {
             case "King": return 0; // King has no point value
             default: return 0;
         }
+    }
+
+    // Setters for ChessClient and playerColor (for networked play)
+    public void setChessClient(ChessClient chessClient) {
+        this.chessClient = chessClient;
+    }
+    public void setPlayerColor(PieceColor playerColor) {
+        this.playerColor = playerColor;
+    }
+
+    // Method to convert a move to chess notation expected by the server
+    private String convertMoveToString(Position fromPosition, Position toPosition) {
+        // Convert to chess notation (e.g., "e2e4", "Ng1f3", "exd5", "Nxf3")
+        String fromSquare = positionToChessNotation(fromPosition);
+        String toSquare = positionToChessNotation(toPosition);
+        Piece piece = gameState.getBoard().getPiece(fromPosition);
+        Piece capturedPiece = gameState.getBoard().getPiece(toPosition);
+        if (piece != null) {
+            String pieceSymbol = getPieceSymbol(piece);
+            boolean isCapture = capturedPiece != null;
+            // For pawn captures, include the file of departure
+            if (pieceSymbol.equals("") && isCapture) {
+                // Pawn capture: exd5
+                return fromSquare.charAt(0) + "x" + toSquare;
+            } else if (isCapture) {
+                // Piece capture: Nxf3
+                return pieceSymbol + "x" + toSquare;
+            } else {
+                // Normal move: e2e4 or Ng1f3
+                return pieceSymbol + fromSquare + toSquare;
+            }
+        }
+        return fromSquare + toSquare;
+    }
+    
+    // Convert position to chess notation (e.g., "e4")
+    private String positionToChessNotation(Position position) {
+        char file = (char) ('a' + position.getX());
+        int rank = 8 - position.getY();
+        return file + "" + rank;
+    }
+    
+    // Get piece symbol for chess notation
+    private String getPieceSymbol(Piece piece) {
+        switch (piece.getType()) {
+            case "Knight": return "N";
+            case "Bishop": return "B";
+            case "Rook": return "R";
+            case "Queen": return "Q";
+            case "King": return "K";
+            case "Pawn": return ""; // Pawns don't get a symbol
+            default: return "";
+        }
+    }
+    
+    // Method to apply moves received from the server (for networked play)
+    public void applyMoveFromServer(String moveString) {
+        System.out.println("RECEIVED MOVE FROM SERVER: " + moveString);
+        try {
+            // Remove 'x' if present (capture notation)
+            String cleanedMove = moveString.replace("x", "");
+            Position fromPosition = null;
+            Position toPosition = null;
+
+            // Handle different move formats
+            if (cleanedMove.length() >= 4) {
+                if (Character.isUpperCase(cleanedMove.charAt(0))) {
+                    // Piece move like "Ng1f3" or "Nf3g5"
+                    String fromSquare = cleanedMove.substring(1, 3);
+                    String toSquare = cleanedMove.substring(3, 5);
+                    fromPosition = chessNotationToPosition(fromSquare);
+                    toPosition = chessNotationToPosition(toSquare);
+                } else {
+                    // Pawn move like "e2e4" or "exd5"
+                    String fromSquare = cleanedMove.substring(0, 2);
+                    String toSquare = cleanedMove.substring(2, 4);
+                    fromPosition = chessNotationToPosition(fromSquare);
+                    toPosition = chessNotationToPosition(toSquare);
+                }
+
+                if (fromPosition != null && toPosition != null) {
+                    // Apply the move directly to the game state (without sending to server)
+                    Board board = gameState.getBoard();
+                    Piece piece = board.getPiece(fromPosition);
+
+                    if (piece != null) {
+                        List<Move> legalMoves = getLegalMovesForPiece(piece);
+                        Move moveToMake = null;
+
+                        for (Move move : legalMoves) {
+                            if (move.getFrom().equals(fromPosition) && move.getTo().equals(toPosition)) {
+                                moveToMake = move;
+                                break;
+                            }
+                        }
+
+                        if (moveToMake != null) {
+                            // Temporarily disable network sending to avoid loops
+                            ChessClient tempClient = chessClient;
+                            chessClient = null;
+
+                            // Apply the move
+                            boolean successful = gameState.makeMove(moveToMake);
+
+                            // Restore the client
+                            chessClient = tempClient;
+
+                            if (successful) {
+                                moveCount++;
+                                logMove(moveToMake);
+
+                                if (moveToMake.getCapturedPiece() != null) {
+                                    updateScore(moveToMake.getCapturedPiece());
+                                }
+
+                                updateView();
+
+                                if (gameState.isGameOver()) {
+                                    logGameOver();
+                                    view.showGameOver(gameState.getGameResult());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error applying move from server: " + e.getMessage());
+        }
+    }
+    
+    // Convert chess notation to position
+    private Position chessNotationToPosition(String square) {
+        if (square.length() == 2) {
+            char file = square.charAt(0);
+            int rank = Integer.parseInt(square.substring(1));
+            int x = file - 'a';
+            int y = 8 - rank;
+            return new Position(x, y);
+        }
+        return null;
     }
 }

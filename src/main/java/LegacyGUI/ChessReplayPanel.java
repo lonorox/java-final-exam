@@ -73,7 +73,7 @@ public class ChessReplayPanel extends JPanel {
         add(controlPanel, BorderLayout.SOUTH);
 
         // Disable nextButton if already at the end
-        if (moveIndex >= moves.length-1) {
+        if (moveIndex >= moves.length) {
             nextButton.setEnabled(false);
         }
 
@@ -81,7 +81,7 @@ public class ChessReplayPanel extends JPanel {
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (moveIndex < moves.length-1) {
+                if (moveIndex < moves.length) {
                     boolean isWhite = moveIndex % 2 == 0;
                     MoveInfo move = new MoveInfo();
                     move.decipherMove(moves[moveIndex]);
@@ -91,7 +91,7 @@ public class ChessReplayPanel extends JPanel {
                     moveIndex++;
                     statusLabel.setText(getStatusText());
                     boardPanel.repaint();
-                    if (moveIndex >= moves.length-1) {
+                    if (moveIndex >= moves.length) {
                         nextButton.setEnabled(false);
                         // Show winner/result
                         String result = game.tags().getOrDefault("Result", "").replaceAll("\"", "").trim();

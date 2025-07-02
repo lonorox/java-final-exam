@@ -4,6 +4,7 @@ import client.NewGUI.Controller.ChessController;
 import client.NewGUI.Model.Board;
 import client.NewGUI.Model.Piece;
 import client.NewGUI.Model.Position;
+import client.NewGUI.Model.PieceColor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,14 +22,17 @@ public class ChessBoardUI extends JPanel {
     private SquareView[][] squares;
     private Position selectedPosition;
     private List<Position> legalMovePositions;
+    private PieceColor playerColor; // For networked play
 
     /**
-     * Constructs a ChessBoardUI with the given controller.
+     * Constructs a ChessBoardUI with the given controller and player color (for networked play).
      *
      * @param controller The chess game controller
+     * @param playerColor The local player's color (null for local play)
      */
-    public ChessBoardUI(ChessController controller) {
+    public ChessBoardUI(ChessController controller, PieceColor playerColor) {
         this.controller = controller;
+        this.playerColor = playerColor;
         this.selectedPosition = null;
         this.legalMovePositions = null;
 
@@ -41,12 +45,18 @@ public class ChessBoardUI extends JPanel {
         initializeBoard();
     }
 
+    // Backward compatibility constructor
+    public ChessBoardUI(ChessController controller) {
+        this(controller, null);
+    }
+
     /**
      * Initialize the chess board with square views.
      */
     private void initializeBoard() {
         squares = new SquareView[BOARD_SIZE][BOARD_SIZE];
 
+        // Create all squares first
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 boolean isLight = (row + col) % 2 == 0;
@@ -56,8 +66,23 @@ public class ChessBoardUI extends JPanel {
 
                 // Add click listener to the square
                 squares[row][col].addMouseListener(new SquareClickListener(position));
+            }
+        }
 
+        // Add squares to the panel in the correct order
+        if (playerColor == PieceColor.BLACK) {
+            // For black players, add squares in reverse order (180 degree rotation)
+            for (int row = BOARD_SIZE - 1; row >= 0; row--) {
+                for (int col = BOARD_SIZE - 1; col >= 0; col--) {
+                    add(squares[row][col]);
+                }
+            }
+        } else {
+            // Normal order for white players
+            for (int row = 0; row < BOARD_SIZE; row++) {
+                for (int col = 0; col < BOARD_SIZE; col++) {
                 add(squares[row][col]);
+                }
             }
         }
     }
@@ -105,6 +130,11 @@ public class ChessBoardUI extends JPanel {
     private void handleSquareClick(Position position) {
         // If game is over, do nothing
         if (controller.isGameOver()) {
+            return;
+        }
+        //
+        // Restrict input to the local player's color and turn if in networked mode
+        if (playerColor != null && controller.getCurrentTurn() != playerColor) {
             return;
         }
 

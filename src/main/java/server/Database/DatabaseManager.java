@@ -1,9 +1,14 @@
 package server.Database;
 
+import server.ChessServer;
 import shared.LegacyCore.ChessGame;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DatabaseManager {
     private static final String DB_URL = "jdbc:sqlite:GamesDB.db";
@@ -57,16 +62,6 @@ public class DatabaseManager {
             """);
 
             // Create moves table
-            stmt.execute("""
-                CREATE TABLE IF NOT EXISTS moves (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    game_id INTEGER,
-                    move_number INTEGER,
-                    white_move TEXT,
-                    black_move TEXT,
-                    FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE
-                )
-            """);
         }
     }
     public void clearGamesTable() throws SQLException {
@@ -75,11 +70,14 @@ public class DatabaseManager {
         }
 
         String sql = "DELETE FROM games";
+        String sql2 = "DELETE FROM sqlite_sequence WHERE name='games'";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.executeUpdate();
         }
+        try (PreparedStatement stmt = connection.prepareStatement(sql2)) {
+            stmt.executeUpdate();
+        }
     }
-
 
     public void saveGame(ChessGame game) throws SQLException {
         if (connection == null) {
@@ -108,28 +106,8 @@ public class DatabaseManager {
                  ResultSet rs = stmt.executeQuery("SELECT last_insert_rowid();")) {
                 if (rs.next()) {
                     int gameId = rs.getInt(1);
-                    saveMoves(gameId, game.moves());
+//                    saveMoves(gameId, game.moves());
                 }
-            }
-        }
-    }
-
-    private void saveMoves(int gameId, String moves) throws SQLException {
-        if (connection == null) {
-            throw new SQLException("Database connection is not initialized");
-        }
-
-        String[] movePairs = moves.split("\\d+\\.");
-        String sql = "INSERT INTO moves (game_id, move_number, white_move, black_move) VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            for (int i = 1; i < movePairs.length; i++) {
-                String[] movesInPair = movePairs[i].trim().split("\\s+");
-                pstmt.setInt(1, gameId);
-                pstmt.setInt(2, i);
-                pstmt.setString(3, movesInPair[0]);
-                pstmt.setString(4, movesInPair.length > 1 ? movesInPair[1] : null);
-                pstmt.executeUpdate();
             }
         }
     }
@@ -164,7 +142,33 @@ public class DatabaseManager {
 
         return games;
     }
+    public List<ChessGame> loadOnlineGames() throws SQLException {
+        if (connection == null) {
+            throw new SQLException("Database connection is not initialized");
+        }
 
+        List<ChessGame> games = new ArrayList<>();
+        String sql = "SELECT * FROM games WHERE event = 'Online Game' ORDER BY created_at DESC";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Map<String, String> tags = new HashMap<>();
+                tags.put("Event", rs.getString("event"));
+                tags.put("Site", rs.getString("site"));
+                tags.put("Date", rs.getString("date"));
+                tags.put("Round", rs.getString("round"));
+                tags.put("White", rs.getString("white"));
+                tags.put("Black", rs.getString("black"));
+                tags.put("Result", rs.getString("result"));
+
+                ChessGame game = new ChessGame(tags, rs.getString("pgn"));
+                games.add(game);
+            }
+        }
+        return games;
+    }
     public String exportGameToPGN(int gameId) throws SQLException {
         if (connection == null) {
             throw new SQLException("Database connection is not initialized");
@@ -206,6 +210,35 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.err.println("Error closing database connection: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+    public void saveGameToDatabase(String result, String whitePlayerName, String BlackPlayerName,List<String> moves) throws SQLException {
+        try {
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            String formatted = today.format(formatter);
+
+            Map<String, String> tags = new HashMap<>();
+            tags.put("Event", "Online Game");
+            tags.put("Site", "KIU_WIFI");
+            tags.put("Date",formatted);
+            tags.put("White", whitePlayerName);
+            tags.put("Black", BlackPlayerName);
+            tags.put("Result", result);
+
+            StringBuilder pgn = new StringBuilder();
+            for (int i = 0; i < moves.size(); i++) {
+                if (i % 2 == 0) {
+                    pgn.append((i/2 + 1) + ".").append(moves.get(i)).append(" ");
+                } else {
+                    pgn.append(moves.get(i)).append(" ");
+                }
+            }
+
+            ChessGame game = new ChessGame(tags, pgn.toString().trim());
+            ChessServer.getDbManager().saveGame(game);
+        } catch (Exception e) {
+            System.err.println("Failed to save game to database: " + e.getMessage());
         }
     }
 } 
