@@ -22,4 +22,7 @@ public enum PieceColor {
         }
         throw new IllegalArgumentException("Invalid PieceColor value: " + value);
     }
+    public PieceColor opposite() {
+        return this == WHITE ? BLACK : WHITE;
+    }
 }

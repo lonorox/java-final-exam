@@ -46,8 +46,8 @@ public class ChessServer {
             white.setGameSession(game);
             black.setGameSession(game);
 
-            white.sendMessage(new Message(Protocol.GAME_STATE, "You are playing as WHITE"));
-            black.sendMessage(new Message(Protocol.GAME_STATE, "You are playing as BLACK"));
+            white.sendMessage(new Message(Protocol.GAME_STATE, Arrays.asList("You are playing as WHITE", black.getUsername())));
+            black.sendMessage(new Message(Protocol.GAME_STATE,  Arrays.asList("You are playing as BLACK", white.getUsername())));
         } else {
             player.sendMessage(new Message(Protocol.GAME_STATE, "Waiting for opponent..."));
         }
@@ -107,6 +107,11 @@ public class ChessServer {
                     break;
                 case Protocol.CHAT:
                     handleChat(message);
+                    break;
+                case Protocol.LOGOUT:
+                    if (player.getGameSession() != null) {
+                        player.getGameSession().playerDisconnected(player);
+                    }
                     break;
                 default:
                     sendMessage(new Message(Protocol.ERROR, "Unknown message type"));

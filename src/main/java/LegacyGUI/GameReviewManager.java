@@ -28,18 +28,19 @@ public class GameReviewManager {
      */
     public void reviewGame(ChessGame game) {
         GameMaster gm = new GameMaster(game.moves());
-        GameResult result = gm.analyzeGame();
-        
-        if (!result.isValid()) {
-            JOptionPane.showMessageDialog(
-                    parentFrame,
-                    "This game is invalid and cannot be reviewed.\nReason: " + result.getLog(),
-                    "Invalid Game",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            return;
-        }
+        if (!game.tags().get("Event").equals("Online Game")){
+            GameResult result = gm.analyzeGame();
 
+            if (!result.isValid()) {
+                JOptionPane.showMessageDialog(
+                        parentFrame,
+                        "This game is invalid and cannot be reviewed.\nReason: " + result.getLog(),
+                        "Invalid Game",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+        }
         showReviewInterface(game);
     }
 
@@ -50,7 +51,7 @@ public class GameReviewManager {
     private void showReviewInterface(ChessGame game) {
         JFrame replayFrame = new JFrame("Chess Game Review");
         replayFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        replayFrame.setSize(520, 560);
+        replayFrame.setSize(800, 600);
         replayFrame.setLayout(new BorderLayout());
         replayFrame.add(new ChessReplayPanel(game), BorderLayout.CENTER);
         replayFrame.setLocationRelativeTo(null);
