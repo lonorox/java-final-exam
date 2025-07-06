@@ -256,12 +256,5 @@ A full-featured Java chess application supporting both local and online play, wi
 
 ## Credits
 
-- Developed by [Your Name/Team]
-- Uses open-source libraries for SQLite and Java Swing
-
----
-
-## License
-
-[Specify your license here]
+- Nani Chkhenkeli, Saba Danelia
 
